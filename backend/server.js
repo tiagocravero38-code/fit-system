@@ -1,28 +1,46 @@
 const express = require('express');
 const cors = require('cors');
-const { sequelize } = require('./src/db'); // Importamos la conexión a la DB
+const { sequelize } = require('./src/db'); 
 
-// IMPORTANTE: Importamos el archivo de RUTAS, no el controlador
+// Importamos el archivo de RUTAS
 const sociosRoutes = require('./src/routes/socios.routes');
 
 const app = express();
-const PORT = 3000;
 
-// Middlewares
-app.use(cors());
+// 1. PUERTO DINÁMICO: Toma el de la nube o usa 3000 en tu PC
+const PORT = process.env.PORT || 3000;
+
+// 2. CONFIGURACIÓN DE CORS: Permite que tu frontend se comunique con esta API
+const origenesPermitidos = [
+    'http://localhost:5173', // Para cuando desarrollás en tu PC
+    process.env.FRONTEND_URL // Para cuando lo subas a Vercel
+];
+
+app.use(cors({
+    origin: (origin, callback) => {
+        // Permite peticiones sin origin (como Postman) o si coincide con la lista
+        if (!origin || origenesPermitidos.includes(origin)) {
+            return callback(null, true);
+        }
+        return callback(new Error('No permitido por CORS'));
+    }
+}));
+
 app.use(express.json());
 
 // --- RUTAS ---
-// Acá le decimos: "Todo lo que empiece con /api/socios, manejalo con el archivo de rutas"
 app.use('/api/socios', sociosRoutes);
+
+// Endpoint de prueba rápido para saber si la API está viva en la nube
+app.get('/', (req, res) => {
+    res.send('API del Gimnasio funcionando correctamente 🏋️‍♂️');
+});
 
 // Iniciar servidor y sincronizar base de datos
 app.listen(PORT, async () => {
-    console.log(`Servidor corriendo limpio en http://localhost:${PORT}`);
+    console.log(`Servidor corriendo en puerto ${PORT}`);
 
     try {
-        // force: false asegura que NO borre los datos cada vez que reinicias
-        // alter: true intenta actualizar la tabla si agregaste columnas nuevas (como metodoPago)
         await sequelize.sync({ alter: true });
         console.log("Base de datos sincronizada");
     } catch (error) {

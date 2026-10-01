@@ -1,10 +1,15 @@
 const { Sequelize, DataTypes } = require('sequelize');
-const path = require('path');
 
-const sequelize = new Sequelize({
-    dialect: 'sqlite',
-    storage: path.join(__dirname, '..', 'database.sqlite'),
-    logging: false
+// Toma la URL de la base de datos desde la nube
+const sequelize = new Sequelize(process.env.DATABASE_URL, {
+    dialect: 'postgres',
+    logging: false,
+    dialectOptions: {
+        ssl: {
+            require: true,
+            rejectUnauthorized: false // Fundamental para que Render/Railway acepte la conexión
+        }
+    }
 });
 
 const Socio = sequelize.define('Socio', {
@@ -19,16 +24,10 @@ const Socio = sequelize.define('Socio', {
 const Pago = sequelize.define('Pago', {
     fecha: { type: DataTypes.DATEONLY, allowNull: false },
     metodoPago: { type: DataTypes.STRING, allowNull: false },
-    // --- NUEVO CAMPO ---
     monto: { type: DataTypes.FLOAT, allowNull: false, defaultValue: 0 }
-    // -------------------
 });
 
 Socio.hasMany(Pago);
 Pago.belongsTo(Socio);
-
-sequelize.sync({ force: false }) // Cambiar a true si da error de columna, pero perderás datos
-    .then(() => console.log("Base de datos sincronizada"))
-    .catch(err => console.error("Error DB:", err));
 
 module.exports = { sequelize, Socio, Pago };

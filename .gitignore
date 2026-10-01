@@ -8,7 +8,6 @@ package-lock.json
 # Ignoramos la DB para no sobrescribir datos de otros o subir datos reales
 *.sqlite
 *.sqlite-journal
-backend/database.sqlite
 
 # --- Archivos de Construcción (Builds) ---
 dist/
