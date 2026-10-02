@@ -2,25 +2,27 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
 import "./index.css";
-import keycloak from "./keycloak";
+// import keycloak from "./keycloak"; // 1. Comentamos la importación temporalmente
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
-// Inicializamos Keycloak
+// 2. Renderizamos la app directamente, sin pasar por la validación
+root.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
+
+/* 3. Dejamos comentada toda la lógica de Keycloak para usarla más adelante
 keycloak
   .init({
-    onLoad: "login-required", // 🔒 ESTO ES EL CANDADO: Obliga a loguearse
-    checkLoginIframe: false, // Evita problemas de cookies en desarrollo
+    onLoad: "login-required", 
+    checkLoginIframe: false, 
   })
   .then((authenticated) => {
     if (authenticated) {
-      // Si el usuario puso bien la clave, cargamos la App
-      root.render(
-        // Quitamos StrictMode momentáneamente para evitar doble render en auth
-        <App />,
-      );
+      root.render(<App />);
     } else {
-      // Si algo falló (raro con login-required), recargamos
       window.location.reload();
     }
   })
@@ -30,7 +32,7 @@ keycloak
       <div className="container mt-5 text-center text-danger">
         <h1>⚠️ Error de Conexión</h1>
         <p>No pudimos conectar con el Servidor de Seguridad (Keycloak).</p>
-        <p>Asegurate de que Docker esté corriendo en el puerto 8080.</p>
-      </div>,
+      </div>
     );
   });
+*/
