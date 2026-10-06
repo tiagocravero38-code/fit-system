@@ -294,17 +294,17 @@ function Dashboard() {
                             <button
                               className="btn btn-outline-success btn-sm"
                               onClick={() => handleReactivar(socio.id)}
-      >
-        ♻️ Restaurar
-      </button>
-      <button 
-        className="btn btn-danger btn-sm ms-2"
-        onClick={() => handleEliminarDefinitivo(socio.id, socio.nombre)}
-      >
-        🗑️ Eliminar
-      </button>
-    </>
-  ) : (
+                            >
+                              ♻️ Restaurar
+                            </button>
+                            <button 
+                              className="btn btn-danger btn-sm ms-2"
+                              onClick={() => handleEliminarDefinitivo(socio.id, socio.nombre)}
+                            >
+                              🗑️ Eliminar
+                            </button>
+                          </>
+                        ) : (
                             <>
                               <button
                                 className="btn btn-outline-primary btn-sm"
