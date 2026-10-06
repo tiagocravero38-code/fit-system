@@ -82,7 +82,15 @@ exports.renovarCuota = async (req, res) => {
 // 4. Estadísticas (Sumando dinero)
 exports.obtenerEstadisticas = async (req, res) => {
     try {
-        const pagos = await Pago.findAll();
+        // Al agregar "include: Socio" y "required: true", obligamos a la base de datos
+        // a traer ÚNICAMENTE los pagos de socios que existen, ignorando los fantasmas.
+        const pagos = await Pago.findAll({
+            include: [{
+                model: Socio,
+                required: true
+            }]
+        });
+        
         const estadisticas = { mensuales: {}, anuales: {} };
 
         pagos.forEach(pago => {
@@ -105,6 +113,7 @@ exports.obtenerEstadisticas = async (req, res) => {
 
         res.json(estadisticas);
     } catch (error) {
+        console.error("Error en estadísticas:", error);
         res.status(500).json({ error: error.message });
     }
 };
