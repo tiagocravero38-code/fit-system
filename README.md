@@ -1,117 +1,41 @@
-# 🏋️‍♂️ Fit-System: Sistema de Gestión de Gimnasios
+# 🏋️ GymSystem - Sistema de Gestión para Gimnasios
 
-**Fit-System** es una plataforma web profesional para la administración de gimnasios. Combina gestión de socios, control financiero, estadísticas avanzadas y seguridad corporativa, todo empaquetado en contenedores Docker para un despliegue instantáneo.
+GymSystem es una aplicación web full-stack diseñada para simplificar la administración de socios de un gimnasio. Permite llevar un control exacto de las membresías, registrar pagos, enviar recordatorios por WhatsApp y visualizar estadísticas financieras en tiempo real.
 
----
+## ✨ Características Principales
 
-## 🚀 Tecnologías
+* **Panel de Control (Dashboard):** Visualización rápida del estado de todos los socios (al día, por vencer, inactivos).
+* **Gestión de Socios:** Alta, edición y ficha detallada de cada cliente.
+* **Control de Pagos:** Registro de renovaciones con detalle de montos y métodos de pago (Efectivo, Transferencia, Tarjeta). Edición del historial de pagos.
+* **Alertas por WhatsApp:** Integración directa para enviar recordatorios de vencimiento a un clic.
+* **Papelera y Bajas:** Sistema de baja lógica (ocultar socios inactivos) y borrado definitivo de la base de datos (con limpieza de historial de pagos).
+* **Estadísticas Financieras:** Gráficos y reportes de recaudación mensual y anual filtrados por método de pago.
 
-El proyecto utiliza un stack moderno y escalable:
+## 🛠️ Tecnologías Utilizadas
 
 ### Frontend
+* **React.js** (con Vite)
+* **React Router Dom** (Navegación)
+* **React Hook Form** (Manejo de formularios)
+* **Axios** (Peticiones HTTP)
+* **Bootstrap** (Diseño y UI)
 
-- **React + Vite:** Interfaz ultra-rápida.
-- **Bootstrap 5:** Diseño responsivo y componentes UI.
-- **Chart.js:** Gráficos estadísticos interactivos.
-- **Keycloak JS:** Cliente de seguridad para autenticación.
-- **Axios & React Router:** Comunicación API y navegación.
+### Backend & Base de Datos
+* **Node.js & Express** (Servidor API REST)
+* **Sequelize** (ORM)
+* **PostgreSQL** (Base de datos alojada en Neon)
 
-### Backend
-
-- **Node.js + Express:** Servidor API RESTful.
-- **Sequelize ORM:** Gestión de base de datos SQL y relaciones (Socios <-> Pagos).
-- **SQLite:** Persistencia de datos ligera y eficiente.
-
-### Infraestructura & Seguridad
-
-- **Docker & Docker Compose:** Entorno unificado.
-- **Keycloak:** Servidor de identidad (IAM) para protección de rutas y gestión de sesiones.
+### Despliegue
+* **Frontend:** Vercel
+* **Backend:** Render
 
 ---
 
-## ✨ Funcionalidades Principales
+## 🚀 Instalación y Configuración Local
 
-### 1. Seguridad Corporativa (Auth) 🔐
+Para correr este proyecto en tu computadora, necesitás tener instalado [Node.js](https://nodejs.org/) y Git.
 
-- **Acceso Restringido:** Nadie puede ver el sistema sin iniciar sesión.
-- **Integración IAM:** Redirección automática al servidor de autenticación (Keycloak).
-- **Gestión de Sesiones:** Login y Logout seguros desde la aplicación.
-
-### 2. Panel de Estadísticas Avanzadas 📈
-
-- **Filtro Temporal:** Selector de años para navegar por el historial financiero (viajar al pasado para ver rendimientos anteriores).
-- **Gráficos Interactivos:** Visualización de ingresos mensuales desglosados por método de pago (Efectivo, Transferencia, Tarjeta).
-- **Resumen Anual:** Panel lateral con totales históricos y contadores de operaciones.
-- **Historial Persistente:** Tabla dedicada de `Pagos` que guarda cada transacción independientemente del estado del socio.
-
-### 3. Gestión de Socios y Cobros 💰
-
-- **Renovación Express:** Funcionalidad para registrar pagos y extender vencimientos con un solo clic.
-- **Cálculo Automático:** El sistema proyecta vencimientos a 30 días.
-- **Alertas de Vencimiento:**
-  - 🔴 **Crítico:** Aviso visual si faltan 3 días o menos.
-  - 🟢 **Al día:** Estado vigente.
-
-### 4. Notificaciones Inteligentes (WhatsApp) 📱
-
-- **Smart Link Argentina:** Algoritmo que detecta números locales, limpia caracteres y agrega prefijos internacionales (`549`) automáticamente.
-- **Mensajes Pre-redactados:** Envía recordatorios personalizados con nombre y fecha exacta de vencimiento.
-
-### 5. Auditoría y Papelera ♻️
-
-- **Soft Delete:** Baja lógica de socios (no se borran datos, se archivan).
-- **Restauración:** Capacidad de reactivar ex-socios manteniendo su historial.
-
----
-
-## 🛠️ Instalación y Credenciales
-
-Requisitos: **Docker Desktop**.
-
-1.  **Clonar el repositorio:**
-
-    ```bash
-    git clone <url-de-tu-repo>
-    cd Fit-System
-    ```
-
-2.  **Iniciar el sistema:**
-
-    ```bash
-    docker-compose up --build
-    ```
-
-3.  **Acceso al Sistema:**
-    Abrí tu navegador en: [http://localhost:5173](http://localhost:5173)
-
-### 🔑 Credenciales por Defecto
-
-| Portal             | URL              | Usuario   | Contraseña |
-| :----------------- | :--------------- | :-------- | :--------- |
-| **App Gimnasio**   | `localhost:5173` | **dueno** | `1234`     |
-| **Panel Keycloak** | `localhost:8080` | **admin** | `admin`    |
-
----
-
-## 📂 Estructura del Proyecto
-
-```text
-Fit-System/
-├── backend/                # API & Base de Datos
-│   ├── src/
-│   │   ├── controllers/    # Lógica de Negocio (Stats, Renovaciones)
-│   │   ├── models/         # Modelos (Socio, Pago)
-│   │   ├── routes/         # Endpoints
-│   │   └── db.js           # Configuración Sequelize
-│   └── database.sqlite     # Archivo DB (Ignorado en git)
-│
-├── frontend/               # SPA React
-│   ├── src/
-│   │   ├── pages/          # Dashboard, Estadisticas, Registro
-│   │   ├── services/       # Conexión API
-│   │   └── keycloak.js     # Configuración de Seguridad
-│   └── Dockerfile
-│
-├── docker-compose.yml      # Orquestador
-└── README.md               # Documentación
-```
+### 1. Clonar el repositorio
+```bash
+git clone [https://github.com/tu-usuario/gym-system.git](https://github.com/tu-usuario/gym-system.git)
+cd gym-system
