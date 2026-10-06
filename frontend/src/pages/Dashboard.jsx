@@ -52,6 +52,27 @@ function Dashboard() {
       await sociosService.reactivar(id);
       cargarSocios();
     }
+    const handleReactivar = async (id) => {
+    if (window.confirm("¿Reactivar?")) {
+      await sociosService.reactivar(id);
+      cargarSocios();
+    }
+  };
+
+  // --- NUEVA FUNCIÓN: ELIMINAR DEFINITIVAMENTE ---
+  const handleEliminarDefinitivo = async (id, nombre) => {
+    const confirmacion = window.confirm(`⚠️ ¿Estás seguro de eliminar a ${nombre} PARA SIEMPRE?\n\nEsta acción NO se puede deshacer y se borrarán todos sus registros.`);
+    
+    if (confirmacion) {
+      try {
+        await sociosService.eliminar(id);
+        cargarSocios();
+      } catch (error) {
+        console.error("Error al eliminar:", error);
+        alert("Hubo un error al intentar eliminar al socio.");
+      }
+    }
+  };
   };
 
   const onRenovarSubmit = async (data) => {
@@ -269,13 +290,21 @@ function Dashboard() {
                       <td className="text-end pe-4">
                         <div className="btn-group">
                           {verInactivos ? (
+                          <>
                             <button
                               className="btn btn-outline-success btn-sm"
                               onClick={() => handleReactivar(socio.id)}
-                            >
-                              ♻️ Restaurar
-                            </button>
-                          ) : (
+      >
+        ♻️ Restaurar
+      </button>
+      <button 
+        className="btn btn-danger btn-sm ms-2"
+        onClick={() => handleEliminarDefinitivo(socio.id, socio.nombre)}
+      >
+        🗑️ Eliminar
+      </button>
+    </>
+  ) : (
                             <>
                               <button
                                 className="btn btn-outline-primary btn-sm"

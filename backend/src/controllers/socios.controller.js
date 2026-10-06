@@ -160,3 +160,20 @@ exports.reactivarSocio = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 };
+
+// 9. Eliminar Socio Definitivamente
+exports.eliminarSocio = async (req, res) => {
+    try {
+        const { id } = req.params;
+        
+        // El "force: true" obliga a la base de datos a borrar el registro para siempre
+        await Socio.destroy({ 
+            where: { id },
+            force: true 
+        });
+
+        res.json({ message: 'Socio eliminado definitivamente de la base de datos' });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};

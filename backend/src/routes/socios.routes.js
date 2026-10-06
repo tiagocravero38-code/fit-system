@@ -33,4 +33,7 @@ router.put('/:id', sociosController.actualizarSocio);
 // 8. Borrar
 router.delete('/:id', sociosController.bajaLogica);
 
+// 9. Eliminar definitivamente
+router.delete('/:id', sociosController.eliminarSocio);
+
 module.exports = router;
