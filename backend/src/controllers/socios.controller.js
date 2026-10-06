@@ -161,19 +161,26 @@ exports.reactivarSocio = async (req, res) => {
     }
 };
 
-// 9. Eliminar Socio Definitivamente
+// 9. Eliminar Socio Definitivamente (y sus pagos)
 exports.eliminarSocio = async (req, res) => {
     try {
         const { id } = req.params;
         
-        // El "force: true" obliga a la base de datos a borrar el registro para siempre
+        // 1ro: Eliminamos definitivamente todos los pagos que pertenezcan a este ID de socio
+        await Pago.destroy({
+            where: { SocioId: id },
+            force: true
+        });
+
+        // 2do: Eliminamos definitivamente al socio
         await Socio.destroy({ 
             where: { id },
             force: true 
         });
 
-        res.json({ message: 'Socio eliminado definitivamente de la base de datos' });
+        res.json({ message: 'Socio y su historial de pagos eliminados definitivamente' });
     } catch (error) {
+        console.error("Error al eliminar definitivamente:", error);
         res.status(500).json({ error: error.message });
     }
 };
