@@ -14,8 +14,14 @@ export const sociosService = {
         const response = await axios.post(API_URL, datos);
         return response.data;
     },
+    // Baja lógica (ocultar)
     eliminar: async (id) => {
         const response = await axios.delete(`${API_URL}/${id}`);
+        return response.data;
+    },
+    // Borrado definitivo de la base de datos
+    eliminarDefinitivo: async (id) => {
+        const response = await axios.delete(`${API_URL}/${id}/definitivo`);
         return response.data;
     },
     actualizar: async (id, datos) => {
