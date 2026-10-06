@@ -47,12 +47,8 @@ function Dashboard() {
       cargarSocios();
     }
   };
+
   const handleReactivar = async (id) => {
-    if (window.confirm("¿Reactivar?")) {
-      await sociosService.reactivar(id);
-      cargarSocios();
-    }
-    const handleReactivar = async (id) => {
     if (window.confirm("¿Reactivar?")) {
       await sociosService.reactivar(id);
       cargarSocios();
@@ -61,11 +57,11 @@ function Dashboard() {
 
   // --- NUEVA FUNCIÓN: ELIMINAR DEFINITIVAMENTE ---
   const handleEliminarDefinitivo = async (id, nombre) => {
-    const confirmacion = window.confirm(`⚠️ ¿Estás seguro de eliminar a ${nombre} PARA SIEMPRE?\n\nEsta acción NO se puede deshacer y se borrarán todos sus registros.`);
+    const confirmacion = window.confirm(`⚠️️ ¿Estás seguro de eliminar a ${nombre} PARA SIEMPRE?\n\nEsta acción NO se puede deshacer y se borrarán todos sus registros.`);
     
     if (confirmacion) {
       try {
-        await sociosService.eliminar(id);
+        await sociosService.eliminarDefinitivo(id);
         cargarSocios();
       } catch (error) {
         console.error("Error al eliminar:", error);
@@ -73,15 +69,12 @@ function Dashboard() {
       }
     }
   };
-  };
 
   const onRenovarSubmit = async (data) => {
     if (!socioARenovar) return;
     try {
       await sociosService.renovar(socioARenovar.id, data);
-      alert(
-        `✅ Registrado pago de $${data.monto} para ${socioARenovar.nombre}`,
-      );
+      alert(`✅ Registrado pago de $${data.monto} para ${socioARenovar.nombre}`);
       setSocioARenovar(null);
       cargarSocios();
     } catch (error) {
@@ -125,7 +118,7 @@ function Dashboard() {
         p.id === pagoEditandoId ? { ...p, ...datosEdicionPago } : p,
       );
 
-      // Ordenar de nuevo por fecha (opcional, pero queda mejor)
+      // Ordenar de nuevo por fecha
       nuevosPagos.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
 
       setSocioSeleccionado({ ...socioSeleccionado, Pagos: nuevosPagos });
@@ -290,21 +283,21 @@ function Dashboard() {
                       <td className="text-end pe-4">
                         <div className="btn-group">
                           {verInactivos ? (
-                          <>
-                            <button
-                              className="btn btn-outline-success btn-sm"
-                              onClick={() => handleReactivar(socio.id)}
-                            >
-                              ♻️ Restaurar
-                            </button>
-                            <button 
-                              className="btn btn-danger btn-sm ms-2"
-                              onClick={() => handleEliminarDefinitivo(socio.id, socio.nombre)}
-                            >
-                              🗑️ Eliminar
-                            </button>
-                          </>
-                        ) : (
+                            <>
+                              <button
+                                className="btn btn-outline-success btn-sm"
+                                onClick={() => handleReactivar(socio.id)}
+                              >
+                                ♻️ Restaurar
+                              </button>
+                              <button 
+                                className="btn btn-danger btn-sm ms-2"
+                                onClick={() => handleEliminarDefinitivo(socio.id, socio.nombre)}
+                              >
+                                🗑️ Eliminar
+                              </button>
+                            </>
+                          ) : (
                             <>
                               <button
                                 className="btn btn-outline-primary btn-sm"
@@ -388,8 +381,6 @@ function Dashboard() {
           style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
         >
           <div className="modal-dialog modal-dialog-centered modal-lg">
-            {" "}
-            {/* modal-lg para mas espacio */}
             <div className="modal-content border-0 shadow-lg">
               <div
                 className={`modal-header text-white ${editandoSocio ? "bg-warning" : "bg-secondary"}`}
